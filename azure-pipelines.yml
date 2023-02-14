@@ -1,0 +1,218 @@
+name: '$(BuildID).$(date:yyMMdd)'
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  webArtifactName: chia-wallet
+  extArtifactName: chia-wallet-ext
+  mixchArtifactName: chia-mixch
+  serverArtifactName: chia-server
+  versionNumber: '0.2.$(Build.BuildNumber)'
+  qaEnvironment: 'chiabee_wallet_qa'
+  qaFtp: 'chiabee_wallet_dev_ftp'
+  prEnvironment: 'chiabee_wallet_pr'
+  prFtp: 'chiabee_wallet_pr_ftp'
+  qaMixchEnvironment: 'chiabee_wallet_qa'
+  qaMixchFtp: 'mixch_dev_ftp'
+  prMixchEnvironment: 'chiabee_wallet_pr'
+  prMixchFtp: 'mixch_pr_ftp'
+
+stages:
+- stage: build
+  displayName: Build
+  jobs:
+  - job: Build
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '16.x'
+      displayName: 'Install Node.js'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'yarn'
+      displayName: 'yarn'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: |
+          sed -i 's/0.0.0.0/$(versionNumber)/' .env.production
+      displayName: 'set version'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'yarn build:all'
+      displayName: 'yarn build:all'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/web/version.txt'
+      displayName: 'write version file'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/mixch/version.txt'
+      displayName: 'write version file(mixch)'
+
+    # - task: CmdLine@2
+    #   inputs:
+    #     workingDirectory: '$(Build.SourcesDirectory)'
+    #     script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/ext/version.txt'
+    #   displayName: 'write version file(ext)'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'yarn build:server'
+      displayName: 'yarn build:server'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/server/version.txt'
+      displayName: 'write version file(server)'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/dist/web'
+        ArtifactName: '$(webArtifactName)'
+        publishLocation: 'Container'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/dist/mixch'
+        ArtifactName: '$(mixchArtifactName)'
+        publishLocation: 'Container'
+
+    # - task: PublishBuildArtifacts@1
+    #   inputs:
+    #     PathtoPublish: '$(Build.SourcesDirectory)/dist/ext'
+    #     ArtifactName: '$(extArtifactName)'
+    #     publishLocation: 'Container'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/dist/server'
+        ArtifactName: '$(serverArtifactName)'
+        publishLocation: 'Container'
+
+
+- stage: pr
+  displayName: pr
+  condition: and(succeeded(), eq(variables['system.pullrequest.targetbranch'], 'refs/heads/master'))
+  dependsOn:
+  - build
+  jobs:
+  - deployment: prdeploy
+    displayName: prDeploy
+    timeoutInMinutes: 10
+    cancelTimeoutInMinutes: 1
+    environment: $(prEnvironment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: FtpUpload@2
+            inputs:
+              credentialsOption: 'serviceEndpoint'
+              serverEndpoint: '$(prFtp)'
+              rootDirectory: '$(Pipeline.Workspace)/$(webArtifactName)'
+              filePatterns: '**'
+              remoteDirectory: '/'
+              clean: false
+              cleanContents: false
+              preservePaths: true
+              trustSSL: false
+
+- stage: qa
+  displayName: qa
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  dependsOn:
+  - build
+  jobs:
+  - deployment: qadeploy
+    displayName: qaDeploy
+    timeoutInMinutes: 10
+    cancelTimeoutInMinutes: 1
+    environment: $(qaEnvironment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: FtpUpload@2
+            inputs:
+              credentialsOption: 'serviceEndpoint'
+              serverEndpoint: '$(qaFtp)'
+              rootDirectory: '$(Pipeline.Workspace)/$(webArtifactName)'
+              filePatterns: '**'
+              remoteDirectory: '/'
+              clean: false
+              cleanContents: false
+              preservePaths: true
+              trustSSL: false
+
+- stage: prMixch
+  displayName: prMixch
+  condition: and(succeeded(), eq(variables['system.pullrequest.targetbranch'], 'refs/heads/master'))
+  dependsOn:
+  - build
+  jobs:
+  - deployment: prMixchdeploy
+    displayName: prMixchDeploy
+    timeoutInMinutes: 10
+    cancelTimeoutInMinutes: 1
+    environment: $(prMixchEnvironment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: FtpUpload@2
+            inputs:
+              credentialsOption: 'serviceEndpoint'
+              serverEndpoint: '$(prMixchFtp)'
+              rootDirectory: '$(Pipeline.Workspace)/$(mixchArtifactName)'
+              filePatterns: '**'
+              remoteDirectory: '/'
+              clean: false
+              cleanContents: false
+              preservePaths: true
+              trustSSL: false
+
+- stage: qaMixch
+  displayName: qaMixch
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  dependsOn:
+  - build
+  jobs:
+  - deployment: qaMixchdeploy
+    displayName: qaMixchDeploy
+    timeoutInMinutes: 10
+    cancelTimeoutInMinutes: 1
+    environment: $(qaMixchEnvironment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: FtpUpload@2
+            inputs:
+              credentialsOption: 'serviceEndpoint'
+              serverEndpoint: '$(qaMixchFtp)'
+              rootDirectory: '$(Pipeline.Workspace)/$(mixchArtifactName)'
+              filePatterns: '**'
+              remoteDirectory: '/'
+              clean: false
+              cleanContents: false
+              preservePaths: true
+              trustSSL: false
