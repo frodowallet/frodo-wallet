@@ -29,6 +29,14 @@
           ><p>{{ $t("settings.about.links.label.donate") }}</p></a
         >
       </div>
+      <div class="mt-5">
+        <p class="has-text-weight-bold">Legal Notices</p>
+
+        <p>
+          The app is forked and modified from the Pawket app by Sutu Labs of 17 February 2023. Alphabean, Inc. releases the app under the GNU General Public License, Version 3.0. Licensees may convey the work under the license. There is no warranty for this app. The Pawket app is copyright Sutu Labs. The modifications to such software code are copyright 2023 Alphabean, Inc. The license may be viewed with a web browser either in the LICENSE file of the frodowallet repository in the frodowallet Github account at
+          <a href="https://www.github.com/frodowallet" target="_blank">https://www.github.com/frodowallet</a>, or via <a href="http://www.frodowallet.com/legal/license.html" target="_blank">http://www.frodowallet.com/legal/license.html</a>.
+        </p>
+      </div>
     </section>
   </div>
 </template>

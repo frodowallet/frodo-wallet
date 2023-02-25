@@ -800,14 +800,14 @@
         "metaHash": "Metadata Hash"
       },
       "summary": {
-        "notification": "Are you sure to mint the NFT?<br/>Please review your transaction.",
+        "notification": "Are you sure you want to create the NFT?<br/>Please review",
         "label": {
           "leadingText": "Minting NFT"
         }
       },
       "tooltip": {
-        "upload": "Select a file to generate a hash for your NFT",
-        "uploadMetadata": "Select a file to generate a hash for your Metadata file"
+        "upload": "Choose the content file to upload for your NFT",
+        "uploadMetadata": "Choose the Metadata file to upload for your NFT"
       },
       "button": {
         "upload": "Get File Hash"

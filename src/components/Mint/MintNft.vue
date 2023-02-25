@@ -38,51 +38,38 @@
       <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
         <b-input maxlength="100" v-model="memo" type="text" @input="reset()" disabled></b-input>
       </b-field>
-      <span class="label">
-        Content Location (URI)
-        <a :href="`https://frodo.coinhabit.net/tutorial/nft${experimentMode?'':'?b=1'}#section-file`" target="_blank">
-          <b-tag icon="help-circle" size="is-small">Help / How to upload</b-tag>
-        </a>
-      </span>
       <b-field>
         <template #message>
           <a v-if="uri" :href="uri" target="_blank">
             <img :src="uri" class="image-preview" />
           </a>
         </template>
-        <b-input maxlength="1024" v-model="uri" type="text" @input="reset()" required></b-input>
       </b-field>
       <span class="label">
-        {{ $t("mintNft.ui.label.hash") }}
-        <b-tooltip :label="$t('mintNft.ui.tooltip.upload')" position="is-bottom" multilined>
+        NFT Image or File
+      </span>
+      <span class="label">
+        <b-tooltip :label="$t('mintNft.ui.tooltip.upload')" position="is-right" multilined>
           <b-upload v-model="imageFile" class="file-label" @input="afterUploadImg">
-            <b-tag icon="tray-arrow-up" size="is-small">{{ $t("mintNft.ui.button.upload") }}</b-tag>
+            <b-tag icon="tray-arrow-up" size="is-small">Upload Image File</b-tag>
           </b-upload>
         </b-tooltip>
+        {{ imgFilename }}
       </span>
-      <b-field>
-        <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
-      </b-field>
       <span class="label">
-        Metadata File Location (URI)
+        Metadata File
         <a :href="`https://frodo.coinhabit.net/create-metadata${experimentMode?'':'?b=1'}`" target="_blank">
           <b-tag icon="help-circle" size="is-small">Help / Create</b-tag>
         </a>
       </span>
-      <b-field>
-        <b-input v-model="metadataUri" type="text" @input="reset()" required></b-input>
-      </b-field>
       <span class="label">
-        Metadata File Hash
-        <b-tooltip :label="$t('mintNft.ui.tooltip.uploadMetadata')" position="is-bottom" multilined>
+        <b-tooltip :label="$t('mintNft.ui.tooltip.uploadMetadata')" position="is-right" multilined>
           <b-upload v-model="imageFile" class="file-label" @input="afterUploadMetadata">
-            <b-tag icon="tray-arrow-up" size="is-small">{{ $t("mintNft.ui.button.upload") }}</b-tag>
+            <b-tag icon="tray-arrow-up" size="is-small">Upload Metada File</b-tag>
           </b-upload>
         </b-tooltip>
+        {{ metadataFilename }}
       </span>
-      <b-field>
-        <b-input maxlength="64" v-model="metadataHash" type="text" @input="reset()" required></b-input>
-      </b-field>
       <b-field v-if="experimentMode" :label="'License URL'">
         <b-input v-model="licenseUri" type="text" @input="reset()" required></b-input>
       </b-field>
@@ -167,6 +154,13 @@ import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } f
 import { isMobile } from "@/services/view/responsive";
 import MintDid from "@/components/Mint/MintDid.vue";
 
+import { NFTStorage, File as NFTFile } from 'nft.storage';
+import mime from 'mime';
+import fs from 'fs';
+import path from 'path';
+
+const NFT_STORAGE_KEY_URL = 'https://frodo.coinhabit.net/storage-v1.json';
+
 interface NftFormInfo {
   uri: string;
   hash: string;
@@ -195,7 +189,7 @@ export default class MintNft extends Vue {
   @Prop() public account!: AccountEntity;
   public addressEditable = true;
   public submitting = false;
-  public fee = 0;
+  public fee = 1;
   public address = "";
   public contactName = "";
   public memo = "";
@@ -210,6 +204,10 @@ export default class MintNft extends Vue {
 
   public uri = "";
   public hash = "";
+  public imgFile: any = null;
+  public imgFilename = "";
+  public metadataFilename = ""
+  public metadataObj: any = null;
   public metadataUri = "";
   public metadataHash = "";
   public licenseUri = "";
@@ -295,16 +293,109 @@ export default class MintNft extends Vue {
     return store.state.app.debug;
   }
 
+  async uploadToNFTStorage() {
+    let storageKey;
+    try {
+      storageKey = (await (await fetch(NFT_STORAGE_KEY_URL)).json()).storageKey;
+    } catch (err) {
+      Notification.open({
+        message: "An error occurred. Please try again.",
+        type: "is-danger",
+        autoClose: false,
+      });
+      console.warn(err);
+      return false;
+    }
+    console.log('metadataObj', this.metadataObj);
+
+    const nftstorage = new NFTStorage({ token: storageKey });
+    this.metadataObj.image = this.imgFile;
+    const {url, ipnft} = await nftstorage.store(this.metadataObj);
+    // https://bafyreiaci7qfn5l7phihmizurajrs7lwqk76yc4ijn7ups3wcptsh52emi.ipfs.nftstorage.link/metadata.json
+    const nsMetadataUrl = `https://${ipnft}.ipfs.nftstorage.link/metadata.json`;
+    const ipfsMetadataUrl = url;
+    const fileName = this.imgFile.name;
+
+    console.log('fileName', fileName);
+    console.log('nsMetadataUrl', nsMetadataUrl);
+
+    let res;
+    try {
+      res = await (await fetch(nsMetadataUrl)).json();
+    } catch (err) {
+      Notification.open({
+        message: "An error occurred. Please try again.",
+        type: "is-danger",
+        autoClose: false,
+      });
+      console.warn(err);
+      return;
+    }
+
+    const ipfsImgUrl = res.image;
+    let imgIpnft = ipfsImgUrl.substr(7);
+    const endIdx = imgIpnft.indexOf('/');
+    imgIpnft = imgIpnft.substr(0, endIdx);
+    const nsImgUrl = `https://${imgIpnft}.ipfs.nftstorage.link/${encodeURI(fileName)}`;
+    console.log('nsImgUrl', nsImgUrl);
+
+    // TODO: Include IPFS uris
+
+    this.uri = nsImgUrl;
+    this.metadataUri = nsMetadataUrl;
+    return true;
+  }
+
   async afterUploadImg(f: File): Promise<void> {
     const hash = await utility.getFileHash(f);
+    this.imgFilename = f.name;
     this.hash = hash;
+    this.imgFile = f;
+    //const {url, ipnft} = await nftstorage.store(this.metadataObj);
+    /*const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
+    const {url, ipnft} = await nftstorage.store({
+        image: f,
+        name: 'image',
+        description: 'image',
+    });
+    console.log(`imgMetadata ${url}, ${ipnft}`);*/
   }
 
   async afterUploadMetadata(f: File): Promise<void> {
     const hash = await utility.getFileHash(f);
+    this.metadataFilename = f.name;
     this.metadataHash = hash;
+    this.metadataObj = null;
+    let metadataObj;
+    try {
+      metadataObj = JSON.parse(await f.text());
+    } catch (err) {
+      Notification.open({
+        message: "Metadata file is not valid JSON",
+        type: "is-danger",
+        duration: 5000,
+      });
+      return;
+    }
+    if (!metadataObj.name) {
+      Notification.open({
+        message: "Metadata must have a name attribute",
+        type: "is-danger",
+        duration: 5000,
+      });
+      return;
+    }
+    if (!metadataObj.description) {
+      Notification.open({
+        message: "Metadata must have a description attribute",
+        type: "is-danger",
+        duration: 5000,
+      });
+      return;
+    }
+    this.metadataObj = metadataObj;
   }
-  
+
   reset(): void {
     this.bundle = null;
   }
@@ -414,6 +505,26 @@ export default class MintNft extends Vue {
   async sign(): Promise<void> {
     this.submitting = true;
     try {
+      if (!this.imgFile) {
+        Notification.open({
+          message: "Please upload an image file",
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
+
+      if (!this.metadataObj) {
+        Notification.open({
+          message: "Please upload a valid metadata file",
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
+
       if (!this.account.firstAddress) {
         this.submitting = false;
         return;
@@ -456,6 +567,11 @@ export default class MintNft extends Vue {
         this.submitting = false;
         return;
       }
+
+      if (!(await this.uploadToNFTStorage())) {
+        this.submitting = false;
+        return;
+      };
 
       const md: NftMetadataValues = {
         imageUri: this.uri,

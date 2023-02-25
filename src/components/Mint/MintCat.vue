@@ -232,13 +232,13 @@ export default class MintCat extends Vue {
       ? this.maxAmount
       : bigDecimal.subtract(this.maxAmount, bigDecimal.divide(this.fee, Math.pow(10, this.decimal), this.decimal));
     this.amount = newAmount;
-    this.numTokens = bigDecimal.getPrettyValue(BigInt(bigDecimal.multiply(this.numericAmount, 1000)), 3, ",");
+    this.numTokens = bigDecimal.getPrettyValue(bigDecimal.divide(this.numericAmount, 1000, 3), 3, ",");
     this.selectMax = true;
   }
 
   updateTokenAmount(value: string): void {
     this.amount = value;
-    this.numTokens = bigDecimal.getPrettyValue(BigInt(bigDecimal.multiply(this.numericAmount, 1000)), 3, ",");
+    this.numTokens = bigDecimal.getPrettyValue(bigDecimal.divide(this.numericAmount, 1000, 3), 3, ",");
     this.reset();
     this.selectMax = false;
   }

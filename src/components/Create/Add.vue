@@ -8,17 +8,12 @@
       <p class="pt-4 has-text-danger has-text-weight-bold">
         {{ $t("createSeed.ui.text.create.tip2") }}
       </p>
+      <p class="pt-5">
+        You can also access these words later from the Settings link
+      </p>
     </section>
     <div class="px-2 mb-4 has-text-centered">
-      <b-tag
-        class="is-justify-content-left py-5 word-button is-size-5 m-2"
-        type="is-info is-light"
-        v-for="(m, index) in seedMnemonicList"
-        :key="index"
-      >
-        <p class="has-text-grey is-size-7">{{ index + 1 }}</p>
-        {{ m }}
-      </b-tag>
+      <textarea class="px-2 py-3" style="width:100%;height:5rem;" v-model="seedMnemonic"></textarea>
     </div>
     <div class="has-text-centered">
       <b-button v-if="debugMode" rounded @click="later()">{{ $t("createSeed.ui.button.later") }}</b-button>
