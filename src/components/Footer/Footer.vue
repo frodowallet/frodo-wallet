@@ -3,10 +3,10 @@
     <div class="content has-text-centered">
       <p>
         <span class="has-text-weight-bold"> {{ $t("footer.ui.productInfo.name") }}</span>
-        <!--<span @click="versionClick()">[{{ version }}]</span>--><span v-if="debugMode" @click="disableDebug()">[DEBUG]</span> by
+        <!--<span @click="versionClick()">[{{ version }}]</span>--><span v-if="debugMode" @click="disableDebug()">[DEBUG]</span> 
         <b-icon icon="github" size="is-small"></b-icon
-        ><a :href="$t('footer.ui.productInfo.authorLink')" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a
-        >.
+        ><a :href="$t('footer.ui.productInfo.authorLink')" target="_blank" class="has-color-link">Source Code</a
+        >
         <br />
         <a href="http://www.frodowallet.com/" target="_blank" size="is-small" class="has-color-link">
           <b-icon icon="home" size="is-small"></b-icon>

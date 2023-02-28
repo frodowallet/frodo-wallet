@@ -205,6 +205,7 @@ export default class MintNft extends Vue {
   public uri = "";
   public hash = "";
   public imgFile: any = null;
+  public metadataFile: any = null;
   public imgFilename = "";
   public metadataFilename = ""
   public metadataObj: any = null;
@@ -307,42 +308,21 @@ export default class MintNft extends Vue {
       return false;
     }
     console.log('metadataObj', this.metadataObj);
-
     const nftstorage = new NFTStorage({ token: storageKey });
-    this.metadataObj.image = this.imgFile;
-    const {url, ipnft} = await nftstorage.store(this.metadataObj);
-    // https://bafyreiaci7qfn5l7phihmizurajrs7lwqk76yc4ijn7ups3wcptsh52emi.ipfs.nftstorage.link/metadata.json
-    const nsMetadataUrl = `https://${ipnft}.ipfs.nftstorage.link/metadata.json`;
-    const ipfsMetadataUrl = url;
-    const fileName = this.imgFile.name;
 
-    console.log('fileName', fileName);
-    console.log('nsMetadataUrl', nsMetadataUrl);
+    // Upload both files at once.
+    const cid = await nftstorage.storeDirectory([
+        this.imgFile,
+        this.metadataFile,
+    ]);
+    console.log('cid', cid)
 
-    let res;
-    try {
-      res = await (await fetch(nsMetadataUrl)).json();
-    } catch (err) {
-      Notification.open({
-        message: "An error occurred. Please try again.",
-        type: "is-danger",
-        autoClose: false,
-      });
-      console.warn(err);
-      return;
-    }
-
-    const ipfsImgUrl = res.image;
-    let imgIpnft = ipfsImgUrl.substr(7);
-    const endIdx = imgIpnft.indexOf('/');
-    imgIpnft = imgIpnft.substr(0, endIdx);
-    const nsImgUrl = `https://${imgIpnft}.ipfs.nftstorage.link/${encodeURI(fileName)}`;
-    console.log('nsImgUrl', nsImgUrl);
-
-    // TODO: Include IPFS uris
-
-    this.uri = nsImgUrl;
-    this.metadataUri = nsMetadataUrl;
+    const imgUri = `https://nftstorage.link/ipfs/${cid}/${encodeURIComponent(this.imgFile.name)}`;
+    const metadataUri = `https://nftstorage.link/ipfs/${cid}/${encodeURIComponent(this.metadataFile.name)}`;
+    console.log('imgUri', imgUri);
+    console.log('metadataUri', metadataUri);
+    this.uri = imgUri;
+    this.metadataUri = metadataUri;
     return true;
   }
 
@@ -351,19 +331,13 @@ export default class MintNft extends Vue {
     this.imgFilename = f.name;
     this.hash = hash;
     this.imgFile = f;
-    //const {url, ipnft} = await nftstorage.store(this.metadataObj);
-    /*const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
-    const {url, ipnft} = await nftstorage.store({
-        image: f,
-        name: 'image',
-        description: 'image',
-    });
-    console.log(`imgMetadata ${url}, ${ipnft}`);*/
   }
 
   async afterUploadMetadata(f: File): Promise<void> {
     const hash = await utility.getFileHash(f);
     this.metadataFilename = f.name;
+    this.metadataFile = f;
+    console.log('metadataFile.name', this.metadataFile.name);
     this.metadataHash = hash;
     this.metadataObj = null;
     let metadataObj;

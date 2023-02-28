@@ -394,7 +394,7 @@ export default class NftDetailPanel extends Vue {
   @Prop() public metadata!: NftOffChainMetadata;
   @Prop() public dids!: DidDetail[];
   public showMore = false;
-  public mintGardenUrl = "https://mintgarden.io/nfts/";
+  //public mintGardenUrl = "https://mintgarden.io/nfts/";
 
   @Emit("close")
   close(): void {
@@ -407,6 +407,10 @@ export default class NftDetailPanel extends Vue {
 
   get updatable(): boolean {
     return this.nft.analysis.metadataUpdaterPuzzleHash == modshash["nft_metadata_updater_cns"];
+  }
+
+  get mintGardenUrl(): string {
+    return store.state.network.network.mintGardenUrl;
   }
 
   get spaceScanUrl(): string {

@@ -56,8 +56,8 @@
     "ui": {
       "productInfo": {
         "name": "Frodo",
-        "author": "Frodo",
-        "authorLink": "http://www.frodowallet.com/"
+        "author": "Alphabean, Inc.",
+        "authorLink": "https://github.com/frodowallet/frodo-wallet"
       },
       "button": {
         "home": "Home",
@@ -964,7 +964,7 @@
         "label": {
           "privacyPolicy": "Privacy Policy",
           "pawketWebsite": "Frodo Website",
-          "github": "Github",
+          "github": "Source Code",
           "twitter": "Twitter",
           "discord": "Discord",
           "donate": "Donate to Developers"
@@ -972,7 +972,7 @@
         "url": {
           "privacyPolicy": "http://www.frodowallet.com/privacypolicy.html",
           "pawketWebsite": "http://www.frodowallet.com/",
-          "github": "https://github.com/frodowallet",
+          "github": "https://github.com/frodowallet/frodo-wallet",
           "twitter": "https://twitter.com/frodowallet",
           "discord": "http://www.frodowallet.com/"
         }

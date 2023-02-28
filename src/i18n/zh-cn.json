@@ -55,9 +55,9 @@
   "footer": {
     "ui": {
       "productInfo": {
-        "name": "Frodo Wallet",
-        "author": "Alphabean Inc.",
-        "authorLink": "http://www.frodowallet.com/"
+        "name": "Frodo",
+        "author": "Alphabean, Inc.",
+        "authorLink": "https://github.com/frodowallet/frodo-wallet"
       },
       "button": {
         "home": "主页",
@@ -963,7 +963,7 @@
         "label": {
           "privacyPolicy": "隐私条款",
           "pawketWebsite": "薄荷钱包官网",
-          "github": "Github",
+          "github": "Source Code",
           "twitter": "Twitter",
           "discord": "Discord",
           "donate": "支持开发者"
@@ -971,7 +971,7 @@
         "url": {
           "privacyPolicy": "http://www.frodowallet.com/privacypolicy.html",
           "pawketWebsite": "http://www.frodowallet.com/",
-          "github": "https://github.com/frodowallet",
+          "github": "https://github.com/frodowallet/frodo-wallet",
           "twitter": "https://twitter.com/frodowallet",
           "discord": "http://www.frodowallet.com/"
         }

@@ -153,6 +153,7 @@ export default class AddNetwork extends Vue {
       symbol: this.currencySymbol,
       chainId: this.chainId,
       explorerUrl: this.blockExplorer,
+      mintGardenUrl: this.blockExplorer,
       spaceScanUrl: this.blockExplorer,
       tokenInfo: tokenInfo,
     };

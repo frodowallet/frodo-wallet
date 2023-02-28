@@ -16,9 +16,11 @@ yarn install
 After yarn install, copy over the following 3 files from
 https://github.com/frodowallet/nft-storage-patched
 
+```
 packages/client/src/lib.js
 packages/client/src/platform.web.js
 packages/client/src/token.js
+```
 
 to node_modules/nft.storage/src
 
