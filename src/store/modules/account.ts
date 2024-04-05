@@ -2,7 +2,7 @@ import store from "@/store";
 import account, { AccountKey } from "@/services/crypto/account";
 import Vue from "vue";
 import receive, { CoinClassType, DidDetail, TokenPuzzleAddress } from "@/services/crypto/receive";
-import { convertToChainId, chainId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { convertToChainId, networkId, chainId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
 import {
   DEFAULT_ADDRESS_RETRIEVAL_COUNT,
@@ -16,7 +16,13 @@ import { desktopNotify } from "@/services/notification/notification";
 import { tc } from "@/i18n/i18n";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
-  return account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];
+  //console.log("chainid account: " + chainId());
+  //console.log(account.allCats);
+  //console.log(networkId());
+  //console.log(" filtered: ");
+  //console.log(account.allCats?.filter((c) => c.network == networkId()));
+  //return account.allCats?.filter((c) => convertToChainId(c.network) == networkId()) ?? [];
+  return account.allCats?.filter((c) => c.network == networkId()) ?? [];
 }
 
 export function getDefaultCats(): CustomCat[] {
@@ -292,16 +298,20 @@ function getAccountEntity(
         network: "mainnet",
       },
       {
-        name: "USDS",
-        id: "6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589",
-        img: "https://images.spacescan.io/xch/cat/6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589/2.png",
-        network: "mainnet",
-      },
-      {
         name: "AIR",
         id: "824c71e37ac660006e03f7884561e7a124d930460ae1506a9c234c06ebc6aa1d",
         img: "https://images.spacescan.io/xch/cat/824c71e37ac660006e03f7884561e7a124d930460ae1506a9c234c06ebc6aa1d/1.png",
         network: "mainnet",
+      },
+      {
+        name: "LFG",
+        id: "0255f2579ee07d8cc6b3733a22cfc366ad374c7a29fddc07535f7a07294e1fbc",
+        network: "aba",
+      },
+      {
+        name: "BEER",
+        id: "2a5d6b0f489a09580d44c49aea324c27fee001199268f772a77bd9e130f59a4b",
+        network: "aba",
       },
     ],
     nfts: [],

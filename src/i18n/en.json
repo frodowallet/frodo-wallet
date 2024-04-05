@@ -949,13 +949,13 @@
     "advanced": {
       "title": "Advanced",
       "label": {
-        "experimental": "Experimental"
+        "experimental": "Advanced"
       },
       "confirmation": {
-        "experimental": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback."
+        "experimental": "Advanced features may not be stable and not fully tested yet, you can have a try and give us your feedback."
       },
-      "description": "After enabling this mode, you can use experimental functions, such as \"Make Offer\", \"Take Offer\", \"Batch Send\", \"Issue CAT\", \"Shadow Wallet\", etc.",
-      "warning": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback. Please turn it on carefully."
+      "description": "After enabling this mode, you can use advanced features, such as more advanced \"Create NFT\", and \"Batch Send\", \"Shadow Wallet\", etc.",
+      "warning": "Advanced features are not stable and not fully tested yet, you can have a try and give us your feedback. Please turn it on carefully."
     },
     "about": {
       "title": "About",

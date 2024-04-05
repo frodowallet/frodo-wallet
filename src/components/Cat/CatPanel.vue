@@ -10,7 +10,7 @@
         <div class="mr-4">
           <span class="image is-32x32">
             <img v-if="cat.img" class="is-rounded" :src="cat.img" />
-            <img v-else-if="cat.name === xchSymbol" class="is-rounded" src="@/assets/chia-logo.svg" />
+            <img v-else-if="cat.name === xchSymbol && networkId === 'mainnet'" class="is-rounded" src="@/assets/chia-logo.svg" />
             <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
           </span>
         </div>
@@ -26,10 +26,10 @@
           </p>
         </div>
       </div>
-      <div v-if="cat.name === xchSymbol" class="column is-flex">
+      <div v-if="cat.name === xchSymbol && (networkId === 'mainnet' || networkId === 'testnet10')" class="column is-flex">
         <div class="py-1" style="width:100%">
           <p class="has-text-grey-dark is-size-6" style="text-align:right">
-            <a :href="`https://frodo.coinhabit.net/wallets/faucet-xch?address=${address}${experimentMode?'':'&b=1'}`" target="_blank">Get free XCH</a>
+            <a :href="`https://frodo.coinhabit.net/wallets/faucet-xch?address=${address}${experimentMode?'':'&b=1'}`" target="_blank">Get free {{ (networkId == 'testnet10') ? 'T' : null }}XCH</a>
           </p>
           <p>
             <span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">&nbsp;</span>
@@ -37,7 +37,7 @@
         </div>
       </div>
       <!-- TODO: This assumes second token is never XCH -->
-      <div v-if="account.tokens && cat.name === Object.keys(account.tokens)[1]" class="column is-flex">
+      <div v-if="account.tokens && cat.name === Object.keys(account.tokens)[1] && networkId === 'mainnet'" class="column is-flex">
         <div class="py-1" style="width:100%">
           <p class="has-text-grey-dark is-size-6" style="text-align:right">
             <a :href="`https://frodo.coinhabit.net/wallets/faucet-tokens?address=${address}${experimentMode?'':'&b=1'}`" target="_blank">Get free tokens</a>
@@ -65,7 +65,7 @@ import { getExchangeRate } from "@/services/exchange/rates";
 import { getTokenInfo } from "@/services/view/cat";
 import store from "@/store";
 import { getAllCats } from "@/store/modules/account";
-import { xchSymbol } from "@/store/modules/network";
+import { xchSymbol, networkId } from "@/store/modules/network";
 import { Component, Vue, Watch } from "vue-property-decorator";
 
 @Component({
@@ -79,7 +79,7 @@ export default class CatPanel extends Vue {
   }
 
   get address(): string | null {
-    return this.account.tokens ? this.account.tokens[xchSymbol()].addresses[1].address : null;
+    return this.account.tokens && this.account.tokens[xchSymbol()] ? this.account.tokens[xchSymbol()].addresses[1].address : null;
   }
 
   get selectedAccount(): number {
@@ -113,6 +113,10 @@ export default class CatPanel extends Vue {
 
   get xchSymbol(): string {
     return xchSymbol();
+  }
+
+  get networkId(): string {
+    return networkId();
   }
 
   get currency(): CurrencyType {

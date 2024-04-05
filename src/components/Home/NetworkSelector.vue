@@ -6,7 +6,7 @@
           <span :class="getdotStyle(networkId)">
             <i v-if="!offline" class="mdi mdi-brightness-1"></i> <i v-else class="mdi mdi-alert"></i
           ></span>
-          <span class="has-text-grey">{{ networkId }}</span>
+          <span class="has-text-grey">{{ networkName }}</span>
           <span class="icon is-small"> <i class="mdi mdi-menu-down"></i> </span>
         </button>
       </template>
@@ -52,6 +52,10 @@ export default class NetworkSelector extends Vue {
     store.dispatch("refreshBalance");
   }
 
+  get networkName(): string {
+    return store.state.network.network.name;
+  }
+
   get experimentMode(): boolean {
     return store.state.vault.experiment;
   }
@@ -70,7 +74,7 @@ export default class NetworkSelector extends Vue {
       color = "has-text-danger";
     } else {
       if (networkId == "testnet10") color = "has-text-info";
-      if (networkId == "mainnet") color = "has-text-primary";
+      if (networkId == "mainnet" || networkId == "aba") color = "has-text-primary";
     }
     return `icon is-small ${color}`;
   }

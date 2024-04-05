@@ -10,6 +10,7 @@ import { CoinSpend, OriginCoin } from "../spendbundle";
 import { convertToOriginCoin, getCoinName0x } from "../coin/coinUtility";
 import { Hex0x, prefix0x } from "../coin/condition";
 import { getLineageProofPuzzle } from "../transfer/call";
+import { networkName } from "../../store/modules/network";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -266,12 +267,13 @@ class Receive {
         const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, ocoin, scoin.solution);
         if (didResult) {
           const did: DidDetail = {
-            name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
-            did: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
+            name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:" + networkName() + ":"),
+            did: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:" + networkName() + ":"),
             hintPuzzle: coinRecords.puzzleHash,
             coin: convertToOriginCoin(coinRecord.coin),
             analysis: didResult,
           };
+          //console.log("receive did:" + networkName() + ":");
           if (oneFound) oneFound({ did });
           didList.push(did);
           continue;

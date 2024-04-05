@@ -381,6 +381,7 @@ import { xchPrefix } from "@/store/modules/network";
 import { shorten } from "@/filters/addressConversion";
 import EditCnsBindings from "../Cns/EditCnsBindings.vue";
 import { modshash } from "@/services/coin/mods";
+import { networkName } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -449,7 +450,7 @@ export default class NftDetailPanel extends Vue {
 
   getDidFromPuzzleHash(hash: string, name = false): string {
     if (!hash || hash.length < 10) return "";
-    const did = puzzle.getAddressFromPuzzleHash(hash, "did:chia:");
+    const did = puzzle.getAddressFromPuzzleHash(hash, "did:" + networkName() + ":");
     if (name) {
       const idx = this.dids.findIndex((d) => d.did == did);
       if (idx > -1) return this.dids[idx].name;

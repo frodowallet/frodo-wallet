@@ -18,14 +18,14 @@
             </b-tooltip>
             <b-button
               :class="{
-                'has-text-primary': !offline && networkId == 'mainnet',
+                'has-text-primary': !offline && (networkId == 'mainnet' || networkId == 'aba'),
                 'has-text-info': !offline && networkId == 'testnet10',
                 'has-text-grey': offline,
                 'is-pulled-right': true,
                 'border-less': true,
                 'pr-1': true,
               }"
-              
+
               @click="$router.push('/home/accounts')"
               rounded
               ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
@@ -78,16 +78,6 @@
                       ><i class="mdi mdi-download mdi-24px has-text-white"></i
                     ></span>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
-                  </div>
-                </a>
-              </div>
-              <div class="b-tooltip">
-                <a @click="$router.push('/home/buy')" href="javascript:void(0)" class="has-text-primary">
-                  <div class="mx-3">
-                    <span class="icon has-background-primary is-medium is-circle"
-                      ><i class="mdi mdi-credit-card-outline mdi-24px has-text-white"></i
-                    ></span>
-                    <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.buy") }}</p>
                   </div>
                 </a>
               </div>
@@ -182,13 +172,10 @@ export default class AccountDetail extends Vue {
   public showOfflineNotification = true;
   public timeoutId?: ReturnType<typeof setTimeout>;
   public activeTab = 0;
-  //@Prop() public account!: AccountEntity;
-  //public account2!: AccountEntity;
-  //public address = ""; //"xch1uw04fu624yng2hajucpew4z4s9ryhdu527v6q78w2mn4qsp7pumsq0gzn5";
   public addressType: AddressType = "Observed";
 
   get address(): string | null {
-    return this.account.tokens ? this.account.tokens[xchSymbol()].addresses[1].address : null;
+    return this.account.tokens && this.account.tokens[xchSymbol()] ? this.account.tokens[xchSymbol()].addresses[1].address : null;
   }
 
   get refreshing(): boolean {
@@ -214,14 +201,6 @@ export default class AccountDetail extends Vue {
   get token(): AccountToken | null {
     return this.account.tokens ? this.account.tokens[xchSymbol()] : null;
   }
-/*
-  get token2(): AccountToken {
-    return this.account2.tokens[xchSymbol()];
-  }
-
-  get addresses(): AccountTokenAddress[] {
-    return this.token2.addresses.filter((a) => a.type == this.addressType);
-  }*/
 
   get activities(): CoinRecord[] {
     return this.account.activities ?? [];

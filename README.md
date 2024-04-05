@@ -26,6 +26,12 @@ to node_modules/nft.storage/src
 
 (diffs https://github.com/frodowallet/nft-storage-patched/commit/9a69a2fcd35fe7e6657052707bf7be10263b39d5)
 
+```
+npx browserslist@latest --update-db
+
+yarn build:pawket
+```
+
 ### Compiles and hot-reloads for development
 
 ```sh

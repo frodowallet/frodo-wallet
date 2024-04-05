@@ -121,7 +121,7 @@ import puzzle from "@/services/crypto/puzzle";
 import { tc } from "@/i18n/i18n";
 import { shorten } from "@/filters/addressConversion";
 import NftTransfer from "./NftTransfer.vue";
-import { xchSymbol } from "@/store/modules/network";
+import { networkName, xchSymbol } from "@/store/modules/network";
 
 interface CollectionNfts {
   name: string;
@@ -144,7 +144,7 @@ export default class NftPanel extends Vue {
   public mintGardenUrl = "https://mintgarden.io/nfts/";
 
   get address(): string {
-    return this.account.tokens[xchSymbol()].addresses[1].address;
+    return this.account.tokens[xchSymbol()].addresses[0].address;
   }
 
   get selectedAccount(): number {
@@ -186,7 +186,8 @@ export default class NftPanel extends Vue {
       nfts = nfts.filter((nft) => !nft.analysis.didOwner || nft.analysis.didOwner.length < 10);
     } else if (this.profile == "Single") {
       const did = this.dids.find((d) => d.name == this.selectedDid);
-      if (did) nfts = nfts.filter((nft) => puzzle.getAddressFromPuzzleHash(nft.analysis.didOwner, "did:chia:") == did.did);
+      if (did) nfts = nfts.filter((nft) => puzzle.getAddressFromPuzzleHash(nft.analysis.didOwner, "did:" + networkName() + ":") == did.did);
+      //if (did) console.log("receive did:" + networkName() + ":");
     }
     this.total = nfts.length;
     return nfts;

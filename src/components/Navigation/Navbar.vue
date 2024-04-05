@@ -5,7 +5,7 @@
         <template #trigger>
           <b-button
             :class="{
-              'has-text-primary': networkId == 'mainnet',
+              'has-text-primary': networkId == 'mainnet' || networkId == 'aba',
               'has-text-info': networkId == 'testnet10',
               'border-less': true,
             }"

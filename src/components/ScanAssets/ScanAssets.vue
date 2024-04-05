@@ -193,6 +193,7 @@ import KeyBox from "../Common/KeyBox.vue";
 import SignMessage from "../Cryptography/SignMessage.vue";
 import { convertToOriginCoin } from "@/services/coin/coinUtility";
 import TopBar from "../Common/TopBar.vue";
+import { networkName } from "@/store/modules/network";
 
 type Option = "Token" | "NftV1" | "CatV2" | "DidV1";
 type Mode = "option" | "result";
@@ -487,9 +488,10 @@ export default class ScanAssets extends Vue {
         if (this.option == "DidV1") {
           const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, ocoin, scoin.solution);
           if (didResult) {
+            //console.log("scan assets did:" + networkName() + ":");
             const did: DidDetail = {
-              name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
-              did: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
+              name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:" + networkName() + ":"),
+              did: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:" + networkName() + ":"),
               hintPuzzle: coinRecords.puzzleHash,
               coin: convertToOriginCoin(coinRecord.coin),
               analysis: didResult,

@@ -82,10 +82,10 @@
       <b-field v-if="experimentMode" :label="'Royalty Percentage'">
         <b-input max="100" min="0" v-model="royaltyPercentage" type="number" @input="reset()" required></b-input>
       </b-field>
-      <b-field v-if="experimentMode" :label="'Series Number'">
+      <b-field v-if="experimentMode" :label="'Edition Number'">
         <b-numberinput min="0" v-model="serialNumber" @input="reset()" required></b-numberinput>
       </b-field>
-      <b-field v-if="experimentMode" :label="'Series Total'">
+      <b-field v-if="experimentMode" :label="'Edition Total'">
         <b-numberinput min="0" v-model="serialTotal" @input="reset()" required></b-numberinput>
       </b-field>
       <fee-selector v-if="experimentMode" v-model="fee" @input="changeFee()"></fee-selector></div>

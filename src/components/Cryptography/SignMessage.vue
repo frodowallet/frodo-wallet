@@ -65,7 +65,7 @@ import puzzle, { PuzzleDetail } from "@/services/crypto/puzzle";
 import { prefix0x, unprefix0x } from "@/services/coin/condition";
 import utility from "@/services/crypto/utility";
 import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { networkName, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCoinName0x } from "@/services/coin/coinUtility";
 import Confirmation from "../Common/Confirmation.vue";
 
@@ -100,7 +100,7 @@ export default class SignMessage extends Vue {
 
   get signName(): string {
     return this.did
-      ? puzzle.getAddressFromPuzzleHash(this.did.launcherId, "did:chia:")
+      ? puzzle.getAddressFromPuzzleHash(this.did.launcherId, "did:" + networkName() + ":")
       : this.nft
       ? puzzle.getAddressFromPuzzleHash(this.nft.p2Owner, "nft")
       : this.xch
@@ -152,7 +152,7 @@ export default class SignMessage extends Vue {
         ? puzzle.getPuzzleHashFromAddress(this.xch)
         : undefined;
       const phResult = this.did
-        ? `DID: ${puzzle.getAddressFromPuzzleHash(this.did.launcherId, "did:chia:")}`
+        ? `DID: ${puzzle.getAddressFromPuzzleHash(this.did.launcherId, "did:" + networkName() + ":")}`
         : this.nft
         ? `NFT: ${puzzle.getAddressFromPuzzleHash(this.nft.launcherId, "nft")}`
         : this.xch

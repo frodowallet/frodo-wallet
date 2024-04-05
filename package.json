@@ -17,6 +17,7 @@
     "test": "jest --coverage=false"
   },
   "dependencies": {
+    "@babel/helper-string-parser": "^7.24.1",
     "@mdi/font": "^6.5.95",
     "@noble/bls12-381": "^1.4.0",
     "@scure/base": "^1.0.0",
