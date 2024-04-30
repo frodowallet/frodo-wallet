@@ -819,7 +819,7 @@
   "addressField": {
     "ui": {
       "label": {
-        "address": "地址 or Namesdao .xch Name",
+        "address": "地址 or Namesdao .xch/.aba Name",
         "bindingAddress": "绑定地址:",
         "lastChanged": "最后更改:",
         "hoursAgo": "小时以前"

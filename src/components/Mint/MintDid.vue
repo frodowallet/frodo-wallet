@@ -185,6 +185,8 @@ export default class MintDid extends Vue {
       // const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       // const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       // this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
+      //console.log("network context");
+      //console.log(networkContext());
       const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await generateMintDidBundle(tgt, change, this.feeBigInt, {}, this.availcoins, observers, networkContext());
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());

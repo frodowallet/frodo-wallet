@@ -29,7 +29,17 @@
       <div v-if="cat.name === xchSymbol && (networkId === 'mainnet' || networkId === 'testnet10')" class="column is-flex">
         <div class="py-1" style="width:100%">
           <p class="has-text-grey-dark is-size-6" style="text-align:right">
-            <a :href="`https://frodo.coinhabit.net/wallets/faucet-xch?address=${address}${experimentMode?'':'&b=1'}`" target="_blank">Get free {{ (networkId == 'testnet10') ? 'T' : null }}XCH</a>
+            <a :href="`https://frodo.coinhabit.net/wallets/faucet-xch?address=${address}${experimentMode?'':'&b=1'}`" target="_blank">Get some free {{ (networkId == 'testnet10') ? 'T' : null }}XCH</a>
+          </p>
+          <p>
+            <span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">&nbsp;</span>
+          </p>
+        </div>
+      </div>
+      <div v-if="cat.name === xchSymbol && (networkId === 'aba')" class="column is-flex">
+        <div class="py-1" style="width:100%">
+          <p class="has-text-grey-dark is-size-6" style="text-align:right">
+            <a :href="`https://abafaucet.com/?address=${address}${experimentMode?'':'&b=1'}`" target="_blank">Get some free ABA</a>
           </p>
           <p>
             <span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">&nbsp;</span>
@@ -41,6 +51,16 @@
         <div class="py-1" style="width:100%">
           <p class="has-text-grey-dark is-size-6" style="text-align:right">
             <a :href="`https://frodo.coinhabit.net/wallets/faucet-tokens?address=${address}${experimentMode?'':'&b=1'}`" target="_blank">Get free tokens</a>
+          </p>
+          <p>
+            <span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">&nbsp;</span>
+          </p>
+        </div>
+      </div>
+      <div v-if="account.tokens && cat.name === Object.keys(account.tokens)[1] && networkId === 'aba'" class="column is-flex">
+        <div class="py-1" style="width:100%">
+          <p class="has-text-grey-dark is-size-6" style="text-align:right">
+            <a :href="`https://www.discord.gg/tbcFbmGaG3`" target="_blank">Get free LFG tokens</a>
           </p>
           <p>
             <span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">&nbsp;</span>

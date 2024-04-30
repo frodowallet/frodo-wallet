@@ -820,7 +820,7 @@
   "addressField": {
     "ui": {
       "label": {
-        "address": "Address or Namesdao .xch Name",
+        "address": "Address or Namesdao .xch/.aba Name",
         "bindingAddress": "Address:",
         "lastChanged": "Last changed:",
         "hoursAgo": "hours ago"

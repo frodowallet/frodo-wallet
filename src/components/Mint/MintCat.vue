@@ -85,7 +85,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
-import { chainId, ensureAddress, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { networkId, ensureAddress, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/view/cat";
@@ -188,7 +188,7 @@ export default class MintCat extends Vue {
   }
 
   get network(): string {
-    return chainId();
+    return networkId(); // "mainnet", "aba", chainId();
   }
 
   get debugMode(): boolean {
@@ -386,7 +386,11 @@ export default class MintCat extends Vue {
 
   async success(): Promise<void> {
     this.close();
+    //console.log({ name: this.symbol.toUpperCase(), id: this.assetId, network: this.network });
+    //console.log(this.account.allCats);
     this.account.allCats.push({ name: this.symbol.toUpperCase(), id: this.assetId, network: this.network });
+    //console.log("pushed");
+    //console.log(this.account.allCats);
     this.account.addressGenerated = 0;
     await store.dispatch("persistent");
     await store.dispatch("refreshBalance");

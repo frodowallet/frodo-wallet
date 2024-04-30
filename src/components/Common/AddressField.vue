@@ -221,12 +221,13 @@ export default class AddressField extends Vue {
   async reset(): Promise<void> {
     this.validAddress = true;
     if (
-      this.address.match(/[a-zA-Z0-9_]{4,}\.[xX][cC][hH]$/) &&  // decides if to attempt to resolve .xch name
+      (this.address.match(/[a-zA-Z0-9_]{4,}\.[xX][cC][hH]$/) || this.address.match(/[a-zA-Z0-9_]{4,}\.[aA][bB][aA]$/) ) && // decides if to attempt to resolve .xch name
       (this.resolveAnswer?.status == "Found" && this.resolveAnswer?.name) != this.address
     ) {
       this.onChainConfirmationStatus = "None";
       this.resolveAnswer = await resolveName(this.address);
-      if (this.resolveAnswer?.status == "Found") { // && this.resolveAnswer?.proof_coin_name) {
+      if (this.resolveAnswer?.status == "Found") {
+        // && this.resolveAnswer?.proof_coin_name) {
         this.onChainConfirmationStatus = "Confirmed"; //ing";
         /*this.proofCoin = await debug.getCoinSolution(this.resolveAnswer?.proof_coin_name, rpcUrl());
         const nftAnalysis = await analyzeNftCoin(
@@ -309,9 +310,9 @@ export default class AddressField extends Vue {
     if (e.target) {
       const el = e.target as HTMLInputElement;
       if (e.clipboardData && el.selectionStart && el.selectionEnd) {
-        const left    = el.value.substring(0, el.selectionStart);
-        const pasted  = e.clipboardData.getData('text').replace(/ /g, '');
-        const right   = el.value.substring(el.selectionEnd, el.value.length);
+        const left = el.value.substring(0, el.selectionStart);
+        const pasted = e.clipboardData.getData("text").replace(/ /g, "");
+        const right = el.value.substring(el.selectionEnd, el.value.length);
         el.value = left + pasted + right;
       }
     }
@@ -321,7 +322,7 @@ export default class AddressField extends Vue {
     //e.preventDefault();
     if (e.target) {
       const el = e.target as HTMLInputElement;
-      var x = el.value.replace(/ /g, '');
+      var x = el.value.replace(/ /g, "");
       el.value = x;
     }
     this.reset();
@@ -361,21 +362,39 @@ export async function resolveName(
   resType: resolveType = "address"
 ): Promise<StandardResolveAnswer | ResolveFailureAnswer> {
   try {
+    const baseUrl = name.endsWith(".aba")
+      ? "https://abanamesdaolookup.abanameservice.org/"
+      : "https://namesdaolookup.xchstorage.com/";
     // strip off .xch/.Xch; note that this strips off any final extension to the name currently
-    var xchName = name.substring(0, name.lastIndexOf('.')) || name;
+    var xchName = name.substring(0, name.lastIndexOf(".")) || name;
     // make it lowercase
     xchName = xchName.toLowerCase();
 
     // todo filter any chars that shouldn't be passed to fetch if applicable TODO
     console.log(xchName);
-    const resp = await fetch("https://namesdaolookup.xchstorage.com/" + xchName + ".json");
+    //const resp = await fetch("https://namesdaolookup.xchstorage.com/" + xchName + ".json");
+
+    const resp = await fetch(baseUrl + xchName + ".json");
+    console.log(baseUrl);
     console.log(resp);
     // convert response to current format of standardresolveanswer
-    const rawResp = (await resp.json());
-    const processedResponse = { answers: [ { "name": xchName, "type": "address", "time_to_live": 600, "data": rawResp["nft_coin_id"], 
-      "proof_coin_name": rawResp["nft_coin_id"], "proof_coin_spent_index": rawResp["nft_coin_id"], "nft_coin_name": rawResp["nft_coin_id"],
-      "address": rawResp["address"], "status": "Found"}] };
-    const qresp = (processedResponse) as StandardResolveQueryResponse;
+    const rawResp = await resp.json();
+    const processedResponse = {
+      answers: [
+        {
+          name: xchName,
+          type: "address",
+          time_to_live: 600,
+          data: rawResp["nft_coin_id"],
+          proof_coin_name: rawResp["nft_coin_id"],
+          proof_coin_spent_index: rawResp["nft_coin_id"],
+          nft_coin_name: rawResp["nft_coin_id"],
+          address: rawResp["address"],
+          status: "Found",
+        },
+      ],
+    };
+    const qresp = processedResponse as StandardResolveQueryResponse;
     const answer = qresp.answers?.at(0);
     if (answer) answer.status = "Found";
     return answer || { status: "NotFound", name: name };
