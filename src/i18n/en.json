@@ -90,7 +90,7 @@
     },
     "message": {
       "confirmation": {
-        "clear": "Resetting wallet will permanently remove all data (including mnemonics and passwords) from your device, make sure that wallet mnemonics have been backed up. Are you sure to reset?",
+        "clear": "Resetting wallet will permanently remove all data (including mnemonics and passwords) from your device, make sure that wallet mnemonics have been backed up. Are you sure you want to reset?",
         "confirmText": "Confirm",
         "cancelText": "Cancel"
       },
@@ -120,21 +120,21 @@
       "text": {
         "create": {
           "tip1": "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)",
-          "tip2": "WARNING: NEVER DISCLOSE YOUR MNEMONIC WORDS. ANYONE WITH THIS MNEMONIC CAN TAKE YOUR XCH FOREVER!"
+          "tip2": "Warning: Never let anyone see your mnemonic words (key words). If anyone sees them, they can take any assets from this wallet."
         },
         "import12": {
           "title": "Import 12-word (Pawket) Mnemonic Words",
-          "tip": "Please enter your 12-word Mnemonic Words in order, using spaces between mnemonics."
+          "tip": "Please enter your 12-word Mnemonic Words (key words) in order, using spaces between words."
         },
         "import24": {
           "title": "Import 24-word Mnemonic Words",
-          "tip": "Please enter your 24-word Mnemonic Words in order, using spaces between mnemonics."
+          "tip": "Please enter your 24-word Mnemonic Words (key words) in order, using spaces between words."
         }
       }
     },
     "message": {
       "error": {
-        "wrongSeed": "Import failed, please check your Mnemonic Words."
+        "wrongSeed": "Import failed, please check your Mnemonic Words (key words)."
       }
     }
   },
@@ -167,7 +167,7 @@
           "scanAssets": "Scan Assets",
           "proxy": "Offline Sign",
           "takeOffer": "Take Offer",
-          "makeOffer": "Make Offer",
+          "makeOffer": "Create Offer",
           "batchSend": "Batch Send",
           "mintCat": "Create Token",
           "mintNft": "Create NFT",
@@ -181,7 +181,7 @@
           "scanAssets": "Scan Assets",
           "proxy": "Offline Sign",
           "takeOffer": "Take Offer",
-          "makeOffer": "Make Offer",
+          "makeOffer": "Create Offer",
           "batchSend": "Batch Send",
           "mintCat": "Create Token",
           "mintNft": "Create NFT",
@@ -327,7 +327,7 @@
   "offer": {
     "make": {
       "ui": {
-        "title": "Make Offer",
+        "title": "Create Offer",
         "panel": {
           "information": "Information",
           "hint": {
@@ -349,7 +349,7 @@
         }
       },
       "messages": {
-        "failedToSign": "Failed to make offer."
+        "failedToSign": "Failed to create offer."
       }
     },
     "symbol": {
@@ -923,21 +923,21 @@
     "security": {
       "title": "Security",
       "label": {
-        "mnemonic": "Mnemonic Words",
+        "mnemonic": "Mnemonic Words (key words)",
         "password": "Login Password",
         "export": "Export Private Information",
         "reset": "Reset Wallet"
       },
       "message": {
-        "clear": "Resetting wallet will permanently remove all data (including Mnemonic Words and passwords) from your device, make sure that wallet Mnemonic Words have been backed up. Are you sure to reset?",
+        "clear": "Resetting wallet will permanently remove all data (including Mnemonic Words and passwords) from your device. Make sure that your wallet Mnemonic Words (key words) have been stored somewhere else. Are you sure you want to reset?",
         "inputPassword": "Enter Password to Continue",
         "passwordNotCorrect": "Incorrect password.",
         "backupConfirmTitle": "PROCEED WITH CAUTION",
         "backupConfirm": "This operation will export the wallet backup information (including Mnemonic Words and Public Key), which can be used to restore the wallet on other devices."
       },
       "button": {
-        "showMnemonic": "Reveal Mnemonic Words",
-        "hideMnemonic": "Hide Mnemonic Words",
+        "showMnemonic": "Reveal Mnemonic Words (key words)",
+        "hideMnemonic": "Hide Mnemonic Words (key words)",
         "password": "Change Password",
         "backup": "Back up Wallet Information",
         "reset": "Reset Wallet"

@@ -51,7 +51,7 @@
           :key="i"
         >
           <div class="nft-image-container">
-            <img class="nft-image is-clickable cover" v-if="nft.metadata.uri" @click="showDetail(nft)" :src="nft.metadata.uri" />
+            <img class="nft-image is-clickable cover" v-if="nft.metadata.uri" @click="showDetail(nft)" :src="nftPreviewBase + nft.address + '.webp'" />
             <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="showDetail(nft)" />
             <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
               <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
@@ -129,6 +129,8 @@ interface CollectionNfts {
   nfts: NftDetail[];
 }
 
+
+
 type CollectionDict = { [name: string]: CollectionNfts };
 type Profile = "All" | "Unassigned" | "Single";
 @Component({})
@@ -142,6 +144,7 @@ export default class NftPanel extends Vue {
   total = 0;
   pageSize = 12;
   public mintGardenUrl = "https://mintgarden.io/nfts/";
+  public nftPreviewBase = "https://nft.dexie.space/preview/medium/"; // + address + ".webp";
 
   get address(): string {
     return this.account.tokens[xchSymbol()].addresses[0].address;

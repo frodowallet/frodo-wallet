@@ -30,6 +30,7 @@
       <!-- TODO: When enablin g experimental mode, dialog box lists both makeOffer and takeOffer
                  as experimental features, but they seem to be enabled regardless of experimental
                  mode being enabled. Change dialog text? -->
+                 <!--
       <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/take-offer')" class="has-text-link">
@@ -39,7 +40,7 @@
             </div>
           </a>
         </b-tooltip>
-      </div>
+      </div>-->
       <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/make-offer')" class="has-text-link">
@@ -49,7 +50,7 @@
             </div>
           </a>
         </b-tooltip>
-      </div>
+      </div><!--
       <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintNft')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/mint-nft')" class="has-text-link">
@@ -59,7 +60,7 @@
             </div>
           </a>
         </b-tooltip>
-      </div>
+      </div>-->
     </div>
     <div v-if="displayDapp" class="columns is-mobile is-multiline mt-2">
       <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
@@ -72,7 +73,7 @@
           </a>
         </b-tooltip>
       </div>
-      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="displayDapp" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/batch-send')" class="has-text-link">
             <div class="has-text-centered">

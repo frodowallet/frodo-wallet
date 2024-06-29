@@ -418,7 +418,7 @@ export async function analyzeNftCoin(
   if (transfer_sgn_struct != root_sgn_struct.raw) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
 
   const { didOwner, p2Owner, updaterInSolution } =
-    ("mod" in p2InnerPuzzle_parsed && p2InnerPuzzle_parsed.mod == "settlement_payments")
+    ("mod" in p2InnerPuzzle_parsed && p2InnerPuzzle_parsed.mod == "settlement_payments_v1")
       ? await getOwnerFromSolutionForSettlementInnerPuzzle(solsexp)
       : await getOwnerFromSolutionForP2InnerPuzzle(solsexp);
 
@@ -540,12 +540,12 @@ async function getOwnerFromSolutionForSettlementInnerPuzzle(sol: SExp): Promise<
   /*
   example:
   (
-    (0x50c22cecf983e330fff93adb93e87959ef466dbd217bc589a08e817825fcfda0 0xb974105be7bc131155a5800659c0d96180ada64d34adc05ae57c8f55dfff4679 1) 1 
+    (0x50c22cecf983e330fff93adb93e87959ef466dbd217bc589a08e817825fcfda0 0xb974105be7bc131155a5800659c0d96180ada64d34adc05ae57c8f55dfff4679 1) 1
     (
       (
         (
-          (0x9b0b7fe0bb3dea99b8fda6f891398b3310ff48fa99f3b717d54b2a26392edfb4 
-            (0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598 1 
+          (0x9b0b7fe0bb3dea99b8fda6f891398b3310ff48fa99f3b717d54b2a26392edfb4
+            (0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598 1
               (0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598)))))))
   */
 
@@ -568,12 +568,12 @@ async function getOwnerFromSolutionForP2InnerPuzzle(sol: SExp): Promise<{
         (;first
           () ;rest.first
           (q ;rest.as_iter
-            (-10 0x7b7f7ae9d65865d67a0305828e940b470a11f94e96568b5df98174147a92f0d6 
-              () 0x3f48282fdc480c0f61e5c6b365997711faec970570c67aca0352ee23de88e4ac) 
-            (51 0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10 1 
-              (0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10 0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10))) 
+            (-10 0x7b7f7ae9d65865d67a0305828e940b470a11f94e96568b5df98174147a92f0d6
+              () 0x3f48282fdc480c0f61e5c6b365997711faec970570c67aca0352ee23de88e4ac)
+            (51 0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10 1
+              (0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10 0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10)))
           ()))))
-  
+
   */
 
   const prog = findByPath(sol, "rrfffrfr");

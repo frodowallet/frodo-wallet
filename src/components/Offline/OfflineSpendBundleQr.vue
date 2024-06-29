@@ -105,7 +105,7 @@ export default class OfflineSpendBundleQr extends Vue {
   }
 
   async splitBundle(bundle: SpendBundle): Promise<string[]> {
-    const bstr = await encodeOffer(bundle, 4, "bundle");
+    const bstr = await encodeOffer(bundle, 6, "bundle");
     const maxLength = 200;
     const total = Math.ceil(bstr.length / maxLength);
     const partLength = Math.ceil(bstr.length / total);

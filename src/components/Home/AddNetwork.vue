@@ -155,6 +155,7 @@ export default class AddNetwork extends Vue {
       explorerUrl: this.blockExplorer,
       mintGardenUrl: this.blockExplorer,
       spaceScanUrl: this.blockExplorer,
+      tailDbUrl: "",
       tokenInfo: tokenInfo,
     };
     store.dispatch("addOrUpdateNetwork", network);

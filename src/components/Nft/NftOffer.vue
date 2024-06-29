@@ -7,7 +7,7 @@
           <b-input :value="nft.address" disabled></b-input>
         </b-field>
         <b-field>
-          <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="image is-64x64" />
+          <img v-if="nft.metadata.uri" :src="nftPreviewUrl" class="image is-64x64" />
           <img v-else src="@/assets/nft-no-image.png" class="image is-64x64" />
           <span class="pl-2 has-text-grey"
             ><p>{{ nft.metadata.name }}</p>
@@ -128,6 +128,10 @@ export default class NftOffer extends Vue {
     return store.state.app.debug;
   }
 
+  get nftPreviewUrl(): string {
+    return "https://nft.dexie.space/preview/medium/" + this.nft.address + ".webp";
+  }
+
   @Emit("close")
   close(): void {
     return;
@@ -193,7 +197,7 @@ export default class NftOffer extends Vue {
       const ubundle = await generateNftOffer(offplan, this.nft.analysis, this.nft.coin, reqs, observers, networkContext());
       const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
       this.bundle = bundle;
-      this.offerText = await encodeOffer(bundle, 4);
+      this.offerText = await encodeOffer(bundle, 6);
 
       this.step = "Confirmation";
 

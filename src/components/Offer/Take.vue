@@ -43,7 +43,7 @@
         <b-loading :is-full-page="false" v-model="isUpdating"></b-loading>
         <b-field v-if="summary" :label="$t('offer.take.ui.panel.information')">
           <template #message>
-            <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
+            <ul v-for="(arr, sumkey) in { requested: summary.requested, offered: summary.offered }" :key="sumkey" :class="sumkey">
               <li v-if="sumkey == 'requested'">{{ $t("offer.take.information.requested") }}</li>
               <li v-if="sumkey == 'offered'">{{ $t("offer.take.information.offered") }}</li>
               <li>
@@ -99,7 +99,7 @@
                     <div v-if="ent.nft_uri" class="column">
                       <a :href="ent.nft_uri" target="_blank">
                         <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-top">
-                          <img :src="ent.nft_uri" class="nft-image" />
+                          <img :src="getNftPreviewUrl(ent.id)" class="nft-image" />
                         </b-tooltip>
                       </a>
                     </div>
@@ -145,7 +145,7 @@
               <ul v-for="(ent, idx) in summary.requested" :key="idx">
                 <li v-if="ent.id && ent.nft_target">
                   <p class="has-text-right">{{ shorten(getNftName(ent.id)) }}</p>
-                  <img :src="ent.nft_uri" class="summary-nft is-pulled-right" />
+                  <img :src="getNftPreviewUrl(ent.id)" class="summary-nft is-pulled-right" />
                 </li>
                 <li v-else-if="ent.id">
                   <span v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
@@ -165,7 +165,7 @@
               <ul v-for="(ent, idx) in summary.offered" :key="idx">
                 <li v-if="ent.id && ent.nft_target">
                   <p class="has-text-right">{{ shorten(getNftName(ent.id)) }}</p>
-                  <img :src="ent.nft_uri" class="summary-nft is-pulled-right" />
+                  <img :src="getNftPreviewUrl(ent.id)" class="summary-nft is-pulled-right" />
                 </li>
                 <li v-else-if="ent.id">
                   <span v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
@@ -381,6 +381,10 @@ export default class TakeOffer extends Vue {
   get tokenInfo(): TokenInfo {
     return getTokenInfo(this.account);
   }
+  //getNftName(hex: string): string {
+  getNftPreviewUrl(entId: string): string {
+    return "https://nft.dexie.space/preview/medium/" + this.getNftName(entId) + ".webp";
+  }
 
   get totalPayment(): string {
     let xchAmount = BigInt(this.fee);
@@ -397,6 +401,7 @@ export default class TakeOffer extends Vue {
         xchAmount += req.amount;
       }
     }
+    if (this.royaltyAmount > 0) xchAmount += this.royaltyAmount;
     let res: string[] = [];
     if (xchAmount > 0) res.push(demojo(xchAmount));
     if (catAmount.length > 0) res.push(catAmount.join("+"));
@@ -598,8 +603,8 @@ export default class TakeOffer extends Vue {
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
-        // console.log("const change_hex=", change_hex, ";");
-        // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
+        console.log("const change_hex=", change_hex, ";");
+        console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
         this.bundle = combined;
 
         if (this.account.type == "PublicKey") {
@@ -633,8 +638,8 @@ export default class TakeOffer extends Vue {
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
-        // console.log("const change_hex=", change_hex, ";");
-        // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
+        console.log("const change_hex=", change_hex, ";");
+        console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
         this.bundle = combined;
         if (this.account.type == "PublicKey") {
           await this.offlineSignBundle();

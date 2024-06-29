@@ -2,7 +2,7 @@ import store from "@/store";
 import account, { AccountKey } from "@/services/crypto/account";
 import Vue from "vue";
 import receive, { CoinClassType, DidDetail, TokenPuzzleAddress } from "@/services/crypto/receive";
-import { convertToChainId, networkId, chainId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { networkId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
 import {
   DEFAULT_ADDRESS_RETRIEVAL_COUNT,

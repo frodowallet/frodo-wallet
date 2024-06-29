@@ -17,7 +17,7 @@
       <div>
         <div class="has-text-centered">
           <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
-          <img v-if="uri" :src="uri" class="image is-128x128" />
+          <img v-if="uri" :src="nftPreviewUrl" class="image is-128x128" />
           <img v-else src="@/assets/nft-no-image.png" class="image is-128x128" />
           <p>{{ nft.name }}</p>
         </div>
@@ -184,6 +184,10 @@ export default class NftTransfer extends Vue {
 
   get uri(): string | undefined {
     return this.nft?.metadata.uri;
+  }
+
+  get nftPreviewUrl(): string {
+    return "https://nft.dexie.space/preview/medium/" + this.nft?.address + ".webp";
   }
 
   changeToken(token: string): void {

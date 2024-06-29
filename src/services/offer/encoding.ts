@@ -20,6 +20,7 @@ const initDict = [
   + modshex["nft_ownership_transfer_program_one_way_claim_with_royalties"],
   modshex["cat_v2"],
   modshex["settlement_payments_v1"],
+  "",
 ]
   .map((t => Buffer.from(t, "hex")))
 

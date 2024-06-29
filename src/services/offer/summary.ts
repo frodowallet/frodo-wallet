@@ -34,7 +34,7 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     const puz = await simplifyPuzzle(assemble(puzzle_reveal), puzzle_reveal);
     const modpath = getModsPath(puz);
     if (modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))"
-      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))") {
+      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments_v1())))") {
       const ss = ((puz as SimplePuzzle)?.args[0] as CannotParsePuzzle).raw;
       const roy = (((((puz as SimplePuzzle)//singleton_top_layer_v1_1
         ?.args[1] as SimplePuzzle)//nft_state_layer
@@ -69,13 +69,13 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     let royalty = -1;
     let imageUri = "";
     if (type == "request") {
-      if (modsdict[puzzle_reveal] == "settlement_payments") {
-        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
+      if (modsdict[puzzle_reveal] == "settlement_payments_v1") {
+        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments_v1"], solution);
       }
       else {
         assetId = await tryGetAssetId(puzzle_reveal);
         if (!assetId) [nftId, royalty, imageUri] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
-        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
+        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments_v1"], solution);
       }
     } else if (type == "offer") {
       result = await puzzle.calcPuzzleResult(puzzle_reveal, solution);
@@ -124,7 +124,7 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
 
   for (let i = 0; i < ocs.length; i++) {
     const coin = ocs[i];
-    offered.push(...(await getCoinEntities(coin, "offer")).filter(_ => _.target == "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79"));
+    offered.push(...(await getCoinEntities(coin, "offer")).filter(_ => _.target == "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7"));
   }
 
   for (let i = 0; i < rcs.length; i++) {

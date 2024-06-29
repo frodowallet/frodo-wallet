@@ -94,6 +94,7 @@ export interface NetworkDetail {
   explorerUrl: string;
   mintGardenUrl: string;
   spaceScanUrl: string;
+  tailDbUrl: string;
   tokenInfo: TokenInfo;
 }
 
@@ -125,6 +126,7 @@ store.registerModule<INetworkState>("network", {
         explorerUrl: "https://www.spacescan.io/xch/address/",
         mintGardenUrl: "https://www.mintgarden.io/nfts/",
         spaceScanUrl: "https://www.spacescan.io/xch/nft/",
+        tailDbUrl: "https://api.v2.tibetswap.io/tokens",
         tokenInfo: {
           XCH: {
             symbol: "XCH",
@@ -133,7 +135,8 @@ store.registerModule<INetworkState>("network", {
           },
         },
       },
-      testnet10: {
+      // "https://catdb.namesdao.org/enterprise/tails",
+      /*testnet10: {
         name: "testnet10-chia",
         rpcUrl: process.env.VUE_APP_API_URL_TESTNET ?? "",
         prefix: "txch",
@@ -149,7 +152,7 @@ store.registerModule<INetworkState>("network", {
             unit: "TXCH",
           },
         },
-      },
+      },*/
       aba: {
         name: "aba",
         rpcUrl: "https://api.abacoin.io/", //process.env.VUE_APP_API_URL_TESTNET ?? "",
@@ -159,6 +162,7 @@ store.registerModule<INetworkState>("network", {
         explorerUrl: "https://aba.spacescan.io/aba/address/",
         mintGardenUrl: "https://aba.mintgarden.io/nfts/",
         spaceScanUrl: "https://aba.spacescan.io/aba/nft/",
+        tailDbUrl: "https://catdb.aba.ooo/tokens",
         tokenInfo: {
           ABA: {
             symbol: "ABA",

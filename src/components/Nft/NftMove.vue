@@ -28,7 +28,7 @@
         <b-input :value="nft.address" disabled></b-input>
       </b-field>
       <b-field>
-        <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="image is-64x64" />
+        <img v-if="nft.metadata.uri" :src="nftPreviewUrl" class="image is-64x64" />
         <img v-else src="@/assets/nft-no-image.png" class="image is-64x64" />
         <span class="pl-2 has-text-grey"
           ><p>{{ nft.metadata.name }}</p>
@@ -45,7 +45,7 @@
           <template #label>
             <span class="is-size-6">{{ $t("moveNft.ui.label.move") }}</span>
             <span class="is-pulled-right">
-              <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="nft-image" />
+              <img v-if="nft.metadata.uri" :src="nftPreviewUrl" class="nft-image" />
               <img v-else src="@/assets/nft-no-image.png" class="nft-image" />
             </span>
           </template>
@@ -142,6 +142,10 @@ export default class NftMove extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get nftPreviewUrl(): string {
+    return "https://nft.dexie.space/preview/medium/" + this.nft.address + ".webp";
   }
 
   @Emit("close")

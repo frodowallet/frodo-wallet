@@ -64,7 +64,7 @@ import { Bytes } from "clvm";
 import SearchCat from "@/components/Cat/SearchCat.vue";
 import { TailInfo } from "@/services/api/tailDb";
 import { unprefix0x } from "@/services/coin/condition";
-import { chainId, convertToChainId } from "@/store/modules/network";
+import { networkId } from "@/store/modules/network";
 import TopBar from "../Common/TopBar.vue";
 
 @Component({
@@ -153,6 +153,7 @@ export default class ManageCats extends Vue {
 
   isExisted(name: string, id: string): boolean {
     for (let t of this.allCats) {
+      console.log(t);
       if (t.id === id || t.name.toUpperCase() === name.toUpperCase()) {
         return true;
       }
@@ -186,6 +187,7 @@ export default class ManageCats extends Vue {
   }
 
   async addCats(tails: TailInfo[]): Promise<void> {
+    // called from cat search form
     tails.map((_) => {
       if (this.isExisted(_.code, _.hash)) {
         Notification.open({
@@ -194,6 +196,8 @@ export default class ManageCats extends Vue {
           duration: 3000,
         });
       } else {
+        //console.log("adding cat:");
+        //console.log({ name: _.code, id: _.hash, img: _.logo_url });
         this.assetIds.push({ name: _.code, id: _.hash, img: _.logo_url });
       }
     });
@@ -227,11 +231,20 @@ export default class ManageCats extends Vue {
   }
 
   async submit(): Promise<void> {
-    const network = chainId();
+    // called to update cat list after using search form or custom add
+    const network = networkId();
+    //console.log(network);
+    //console.log(_.network);
+    //console.log({ name: _.name, id: _.id, img: _.img, network });
+    //console.log(this.account.allCats);
+    //console.log(this.account.allCats = this.account.allCats.filter((_) => convertToChainId(_.network) != network));
     this.account.allCats = this.account.allCats
-      .filter((_) => convertToChainId(_.network) != network)
+//      .filter((_) => convertToChainId(_.network) != network)
+      .filter((_) => _.network != network)
       .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, img: _.img, network })));
-    this.account.addressGenerated = 0;
+      //console.log("after add cat");
+      //console.log(this.account.allCats);
+      this.account.addressGenerated = 0;
   }
 
   updateOrder(detail: { oldIndex: number; newIndex: number }): void {

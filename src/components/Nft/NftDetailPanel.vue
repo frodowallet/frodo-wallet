@@ -5,7 +5,7 @@
       <div class="columns is-mobile is-multiline">
         <div class="column is-6-tablet is-12-mobile">
           <span @click="preview(nft.metadata.uri)"
-            ><b-image v-if="nft.metadata.uri" :src="nft.metadata.uri" alt="NFT image" ratio="1by1"></b-image
+            ><b-image v-if="nft.metadata.uri" :src="nftPreviewUrl" alt="NFT image" ratio="1by1"></b-image
             ><b-image v-else :src="require('@/assets/nft-no-image.png')" alt="NFT image" ratio="1by1"></b-image
           ></span>
         </div>
@@ -400,6 +400,10 @@ export default class NftDetailPanel extends Vue {
   @Emit("close")
   close(): void {
     return;
+  }
+
+  get nftPreviewUrl(): string {
+    return "https://nft.dexie.space/preview/medium/" + this.nft.address + ".webp";
   }
 
   get isMobile(): boolean {
