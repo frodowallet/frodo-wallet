@@ -34,6 +34,7 @@ class Dexie {
 
   public async uploadOffer(offer: string): Promise<unknown> {
     const resp = await fetch(rpcUrl() + "Wallet/offers", {
+    //const resp = await fetch(this.dexieOfferUrl() + "/offers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -26,7 +26,8 @@ export function chainId(): string {
   return store.state.network.network.chainId;
 }
 export function mainnetChainId(): string {
-  return store.state.network.networks['mainnet'].chainId;
+  //return store.state.network.networks['chia'].chainId;
+  return chainId();
 }
 export function convertToChainId(networkName: string): string {
   //console.log("convert to chain id: " + networkName);
@@ -124,7 +125,7 @@ store.registerModule<INetworkState>("network", {
         symbol: "XCH",
         chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
         explorerUrl: "https://www.spacescan.io/xch/address/",
-        mintGardenUrl: "https://www.mintgarden.io/nfts/",
+        mintGardenUrl: "https://mintgarden.io/nfts/",
         spaceScanUrl: "https://www.spacescan.io/xch/nft/",
         tailDbUrl: "https://api.v2.tibetswap.io/tokens",
         tokenInfo: {
